@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Order Status</title>
+
+<style>
+
+body{
+    font-family:Arial,sans-serif;
+    background:#f5f7fa;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.card{
+    background:white;
+    padding:40px;
+    border-radius:15px;
+    box-shadow:0 0 20px rgba(0,0,0,0.1);
+    width:500px;
+    text-align:center;
+}
+
+h1{
+    color:#1e3a8a;
+    margin-bottom:20px;
+}
+
+.info{
+    text-align:left;
+    margin-top:20px;
+}
+
+.info p{
+    font-size:18px;
+    margin:15px 0;
+}
+
+.pending{
+    color:orange;
+    font-weight:bold;
+}
+
+.processing{
+    color:blue;
+    font-weight:bold;
+}
+
+.delivered{
+    color:green;
+    font-weight:bold;
+}
+
+.btn{
+    display:inline-block;
+    margin-top:25px;
+    padding:12px 25px;
+    background:#1e3a8a;
+    color:white;
+    text-decoration:none;
+    border-radius:8px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+{% if order %}
+
+<h1>✅ Order Found</h1>
+
+<div class="info">
+
+<p><b>Order ID:</b> {{ order[1] }}</p>
+
+<p><b>Customer:</b> {{ order[2] }}</p>
+
+<p><b>Status:</b>
+<span class="
+{% if order[9]=='Pending' %}pending
+{% elif order[9]=='Processing' %}processing
+{% else %}delivered
+{% endif %}
+">
+{{ order[9] }}
+</span>
+</p>
+
+<p><b>Date:</b> {{ order[8] }}</p>
+
+</div>
+
+{% else %}
+
+<h1>❌ Order Not Found</h1>
+
+{% endif %}
+
+<a href="/track" class="btn">
+Track Another Order
+</a>
+
+</div>
+
+</body>
+</html>

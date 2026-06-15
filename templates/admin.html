@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>INK BOOKS ADMIN DASHBOARD</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="top-bar">
+
+        <h1>📚 INK BOOKS ADMIN DASHBOARD</h1>
+
+        <div>
+
+            <a href="/export" class="excel-btn">
+                📥 Download Excel
+            </a>
+
+            <a href="/logout" class="logout-btn">
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="summary-card">
+        Total Customer Inquiries : {{ data|length }}
+    </div>
+    <div class="summary-card">
+    <h2>Total Notebooks Ordered : {{ total_qty }}</h2>
+</div>
+
+    <input
+    type="text"
+    id="searchInput"
+    placeholder="🔍 Search Name, Shop or Mobile..."
+    class="search-box">
+
+    <div class="table-wrapper">
+
+        <table>
+
+            <thead>
+
+       <tr>
+    <th>Order ID</th>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Shop Name</th>
+    <th>Mobile</th>
+    <th>Designs</th>
+    <th>Quantity</th>
+    <th>Message</th>
+    <th>Date & Time</th>
+    <th>WhatsApp</th>
+    <th>Status</th>
+    <th>Action</th>
+</tr>
+
+            </thead>
+
+            <tbody>
+
+        
+
+           {% for row in data %}
+<tr>
+
+<td>{{ row[1] }}</td>
+<td>{{ row[0] }}</td>
+<td>{{ row[2] }}</td>
+<td>{{ row[3] }}</td>
+<td>{{ row[4] }}</td>
+
+<td style="max-width:350px;">
+{{ row[5].replace(',', '<br>')|safe }}
+</td>
+
+<td>{{ row[6] }}</td>
+
+<td>{{ row[7] }}</td>
+
+<td>{{ row[8] }}</td>
+
+<td>
+<a href="https://wa.me/91{{ row[4] }}"
+target="_blank"
+class="whatsapp-btn">
+WhatsApp
+</a>
+</td>
+
+<td>
+<a href="/status/{{row[0]}}/Pending">🟡</a>
+<a href="/status/{{row[0]}}/Processing">🔵</a>
+<a href="/status/{{row[0]}}/Delivered">🟢</a>
+
+<br><br>
+
+<b>{{ row[9] }}</b>
+</td>
+
+<td>
+<a href="/delete/{{ row[0] }}"
+class="delete-btn">
+Delete
+</a>
+</td>
+
+</tr>
+{% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<script>
+
+document.getElementById("searchInput")
+.addEventListener("keyup", function() {
+
+    let filter = this.value.toLowerCase();
+
+    let rows = document.querySelectorAll("tbody tr");
+
+    rows.forEach(function(row){
+
+        let text = row.innerText.toLowerCase();
+
+        row.style.display =
+        text.includes(filter)
+        ? ""
+        : "none";
+
+    });
+
+});
+
+</script>
+
+</body>
+</html>

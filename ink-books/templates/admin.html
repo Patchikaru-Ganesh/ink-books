@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>INK BOOKS ADMIN DASHBOARD</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="top-bar">
+
+        <h1>📚 INK BOOKS ADMIN DASHBOARD</h1>
+
+        <div>
+
+            <a href="/export" class="excel-btn">
+                📥 Download Excel
+            </a>
+
+            <a href="/logout" class="logout-btn">
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="summary-card">
+        Total Customer Inquiries : {{ data|length }}
+    </div>
+
+    <input
+    type="text"
+    id="searchInput"
+    placeholder="🔍 Search Name, Shop or Mobile..."
+    class="search-box">
+
+    <div class="table-wrapper">
+
+        <table>
+
+            <thead>
+
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Shop Name</th>
+                <th>Mobile</th>
+                <th>Designs</th>
+                <th>Quantity</th>
+                <th>Message</th>
+                <th>Action</th>
+            </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for row in data %}
+
+            <tr>
+
+                <td>{{ row[0] }}</td>
+
+                <td>{{ row[1] }}</td>
+
+                <td>{{ row[2] }}</td>
+
+                <td>{{ row[3] }}</td>
+
+                <td class="design-cell">
+                    {{ row[4].replace(',', '<br>')|safe }}
+                </td>
+
+                <td>{{ row[5] }}</td>
+
+                <td>{{ row[6] }}</td>
+
+                <td>
+                    <a
+                    href="/delete/{{ row[0] }}"
+                    class="delete-btn"
+                    onclick="return confirm('Delete this inquiry?')">
+                    Delete
+                    </a>
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<script>
+
+document.getElementById("searchInput")
+.addEventListener("keyup", function() {
+
+    let filter = this.value.toLowerCase();
+
+    let rows = document.querySelectorAll("tbody tr");
+
+    rows.forEach(function(row){
+
+        let text = row.innerText.toLowerCase();
+
+        row.style.display =
+        text.includes(filter)
+        ? ""
+        : "none";
+
+    });
+
+});
+
+</script>
+
+</body>
+</html>

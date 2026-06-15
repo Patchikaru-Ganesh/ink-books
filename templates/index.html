@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+          <meta name="description"
+content="Premium A4 notebooks manufacturer and wholesale supplier in India. Bulk orders available.">
+
+<meta name="keywords"
+content="notebooks wholesale, A4 notebooks, bulk notebooks, school notebooks, ink books">
+<link rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='images/favicon.png') }}">
+<link rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='images/favicon.png') }}">
+    </head>
+
+<body>
+   
+
+<!-- NAVBAR -->
+<nav class="navbar">
+
+    <div class="logo">
+        <a href="#home">INK BOOKS</a>
+    </div>
+
+    <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#products">Products</a></li>
+    <li><a href="#quote-form">Bulk Orders</a></li>
+    <li><a href="/track">Track Order</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+</ul>
+
+</nav>
+
+<!-- HERO SECTION -->
+<section class="hero" id="home">
+
+    <div class="hero-overlay">
+
+        <div class="hero-left">
+
+            
+
+            <h1>
+                Premium Wholesale Notebooks
+                For Your Bulk Needs
+            </h1>
+
+            <p>
+                High quality A4 notebooks perfect for students,
+                schools and wholesale buyers.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a href="#quote-form" class="quote-btn">
+                    Get A Quote
+                </a>
+
+                <a href="https://wa.me/918074170948"
+                   class="whatsapp-btn-hero"
+                   target="_blank">
+                    Chat on WhatsApp
+                </a>
+
+            </div>
+
+        </div>
+
+    
+
+    </div>
+
+</section>
+
+<!-- TRUST BAR -->
+<section class="trust-bar">
+
+    <div>✓ Premium White Paper</div>
+    <div>✓ Bulk Orders Available</div>
+    <div>✓ Attractive Cover Designs</div>
+    <div>✓ Fast Delivery</div>
+
+</section>
+
+<!-- STATS -->
+<section class="stats">
+
+    <div class="stat-box">
+        <h2>10+</h2>
+        <p>Notebook Designs</p>
+    </div>
+
+    <div class="stat-box">
+        <h2>5000+</h2>
+        <p>Books Supplied</p>
+    </div>
+
+    <div class="stat-box">
+        <h2>100+</h2>
+        <p>Retail Partners</p>
+    </div>
+
+    <div class="stat-box">
+        <h2>24/7</h2>
+        <p>Customer Support</p>
+    </div>
+
+</section>
+
+<!-- WHY CHOOSE -->
+<section class="why-choose" id="about">
+
+    <h2>Why Choose Ink Books?</h2>
+
+    <div class="features-container">
+
+        <div class="feature-card">
+            <h3>Premium White Paper</h3>
+            <p>Smooth writing experience with high-quality paper.</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>160 Pages A4 Size</h3>
+            <p>Perfect for students, schools and retailers.</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>Attractive Cover Designs</h3>
+            <p>Multiple trendy notebook cover collections available.</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>Bulk Orders Available</h3>
+            <p>Wholesale pricing for book stores and distributors.</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>Fast Delivery</h3>
+            <p>Quick order processing and shipment support.</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>Reliable Service</h3>
+            <p>Dedicated support for all wholesale customers.</p>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ORDER FORM START -->
+<form action="/submit" method="POST">
+
+<!-- PRODUCTS -->
+<section class="products" id="products">
+
+    <h2>Our Notebook Collections</h2>
+
+    <div class="product-container">
+
+        <!-- BTS -->
+        <div class="card">
+            <img src="{{ url_for('static', filename='images/breaking-bad.jpg') }}">
+            <h3>BREAKING BAD EDITION</h3>
+            <p>SIZE A4 | 179 Pages|79 MRP</p>
+            <input type="number" name="breaking-bad_qty" min="10"  placeholder="Minimum 10">
+        </div>
+
+        <!-- PEAKY -->
+       <div class="card">
+            <img src="{{ url_for('static', filename='images/Bts.jpeg') }}">
+            <h3>BTS EDITION</h3>
+            <p>SIZE A4 | 179 Pages|79 MRP</p>
+            <input type="number" name="bts_qty" min="10"  placeholder="Minimum 10">
+        </div>
+
+        <!-- VIRAT -->
+        <div class="card">
+            <img src="{{ url_for('static', filename='images/cartoon.jpeg') }}">
+            <h3>MINIONS EDITION</h3>
+            <p>SIZE A4 | 179 Pages|79 MRP</p>
+            <input type="number" name="minions_qty" min="10"  placeholder="Minimum 10">
+        </div>
+
+        <!-- SHIVA -->
+        <div class="card">
+            <img src="{{ url_for('static', filename='images/cricket.jpeg') }}">
+            <h3>VIRAT KOHLI EDITION</h3>
+            <p>SIZE A4 | 179 Pages|79 MRP</p>
+            <input type="number" name="virat_kohli_qty" min="10"  placeholder="Minimum 10">
+        </div>
+
+        <!-- FREE FIRE -->
+        <div class="card">
+            <img src="{{ url_for('static', filename='images/free-fire.jpeg') }}">
+            <h3>FREE FIRE EDITION</h3>
+            <p>SIZE A4 | 179 Pages|79 MRP</p>
+            <input type="number" name="free_fire_qty" min="10" placeholder="Minimum 10">
+        </div>
+
+        <!-- UNICORN -->
+        <div class="card">
+            <img src="{{ url_for('static', filename='images/hero0.jpeg') }}">
+            <h3>SQUID GAME EDITION</h3>
+            <p>SIZE A4 | 179 Pages|79 MRP</p>
+            <input type="number" name="squid_game_qty" min="10"  placeholder="Minimum 10">
+        </div>
+        <div class="card">
+            <img src="{{ url_for('static', filename='images/jack-sparrow.jpg') }}">
+            <h3>JACK SPARROW EDITION</h3>
+            <p>SIZE A4 | 179 Pages|79 MRP</p>
+            <input type="number" name="jack_sparrow_qty" min="10"  placeholder="Minimum 10">
+        </div>
+
+       <div class="card">
+            <img src="{{ url_for('static', filename='images/krishna.jpeg') }}">
+            <h3>KRISHNA EDITION</h3>
+            <p>SIZE A4 | 179 Pages|79 MRP</p>
+            <input type="number" name="krishna_qty" min="10"  placeholder="Minimum 10">
+        </div>
+
+        <div class="card">
+            <img src="{{ url_for('static', filename='images/logo.png') }}">
+            <h3>VIRO EDITION</h3>
+            <p>SIZE A4 | 179 Pages|79 MRP</p>
+            <input type="number" name="viro_qty" min="10"  placeholder="Minimum 10">
+        </div>
+        
+     <div class="card">
+            <img src="{{ url_for('static', filename='images/money-heist.jpeg') }}">
+            <h3>MONEY HEIST EDITION</h3>
+            <p>SIZE A4 | 179 Pages|79 MRP</p>
+            <input type="number" name="money_heist_qty" min="10"  placeholder="Minimum 10">
+        </div>
+        
+       <div class="card">
+            <img src="{{ url_for('static', filename='images/shiva.jpeg') }}">
+            <h3>SHIVA EDITION</h3>
+            <p>SIZE A4 | 179 Pages|79 MRP</p>
+            <input type="number" name="shiva_qty" min="10"  placeholder="Minimum 10">
+        </div>
+
+        <div class="card">
+            <img src="{{ url_for('static', filename='images/unicorn.jpeg') }}">
+            <h3>UNICORN EDITION</h3>
+            <p>SIZE A4 | 179 Pages|79 MRP</p>
+            <input type="number" name="unicorn_qty" min="10"  placeholder="Minimum 10">
+        </div>
+        
+    </div>
+
+</section>
+
+<!-- QUOTE FORM -->
+<section class="quote-section" id="quote-form">
+
+    <div class="quote-card">
+
+        <h2>📦 Request a Bulk Quote</h2>
+
+        <p class="quote-subtitle">
+            Get wholesale pricing for premium A4 notebooks.
+        </p>
+
+        <div class="quote-form">
+
+            <input
+                type="text"
+                name="name"
+                placeholder="👤 Full Name"
+                pattern="[A-Za-z ]+"
+                required
+                oninvalid="this.setCustomValidity('Please enter only letters in your name')"
+                oninput="this.setCustomValidity('')">
+
+            <input
+                type="text"
+                name="shop"
+                placeholder="🏪 Shop / Business Name"
+                required>
+
+            <input
+                type="tel"
+                name="mobile"
+                placeholder="📱 10 Digit Mobile Number"
+                pattern="[6-9][0-9]{9}"
+                required
+                oninvalid="this.setCustomValidity('Please enter a valid Indian mobile number')"
+                oninput="this.setCustomValidity('')">
+
+            <textarea
+                name="message"
+                placeholder="✍ Additional Requirements"></textarea>
+
+            <button type="submit">
+                🚀 Place Order
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+</form>
+
+<!-- WHATSAPP -->
+<a href="https://wa.me/918074170948"
+   class="whatsapp-btn"
+   target="_blank">
+    💬
+</a>
+
+<!-- FOOTER -->
+<footer class="footer" id="contact">
+
+    <div class="footer-content">
+
+        <h2>INK BOOKS</h2>
+
+        <p>
+            Premium A4 White Notebooks for Retailers,
+            Book Stores and Bulk Buyers.
+        </p>
+
+        <p>📞 Phone: 8074170948</p>
+        <p>📱 WhatsApp: 8074170948</p>
+        <p>📧 Email: patchikaruganesh@gmail.com</p>
+
+        <p class="copyright">
+            © 2026 Ink Books. All Rights Reserved.
+        </p>
+
+    </div>
+
+</footer>
+
+</body>
+</html>

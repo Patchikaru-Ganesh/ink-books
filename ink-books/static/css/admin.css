@@ -1,0 +1,133 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#f4f7fc;
+    padding:30px;
+}
+
+.container{
+    max-width:1600px;
+    margin:auto;
+}
+
+.top-bar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.top-bar h1{
+    color:#1e3a8a;
+}
+
+.excel-btn{
+    background:#16a34a;
+    color:white;
+    text-decoration:none;
+    padding:12px 20px;
+    border-radius:8px;
+    margin-right:10px;
+    font-weight:bold;
+}
+
+.logout-btn{
+    background:#dc2626;
+    color:white;
+    text-decoration:none;
+    padding:12px 20px;
+    border-radius:8px;
+    font-weight:bold;
+}
+
+.summary-card{
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    text-align:center;
+    font-size:32px;
+    font-weight:bold;
+    color:#1e3a8a;
+    margin-bottom:25px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+}
+
+.search-box{
+    width:100%;
+    padding:15px;
+    border:2px solid #1e3a8a;
+    border-radius:10px;
+    margin-bottom:25px;
+    font-size:16px;
+}
+
+.table-wrapper{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+}
+
+th{
+    background:#1e3a8a;
+    color:white;
+    padding:15px;
+}
+
+td{
+    padding:12px;
+    border:1px solid #ddd;
+    vertical-align:top;
+}
+
+tr:nth-child(even){
+    background:#f8fafc;
+}
+
+tr:hover{
+    background:#eef4ff;
+}
+
+.design-cell{
+    max-width:500px;
+    line-height:1.8;
+}
+
+.delete-btn{
+    background:#ef4444;
+    color:white;
+    padding:8px 15px;
+    text-decoration:none;
+    border-radius:6px;
+    font-weight:bold;
+}
+
+.delete-btn:hover{
+    background:#dc2626;
+}
+
+@media(max-width:768px){
+
+    body{
+        padding:10px;
+    }
+
+    .top-bar{
+        flex-direction:column;
+        gap:15px;
+        text-align:center;
+    }
+
+    .summary-card{
+        font-size:24px;
+    }
+
+}
