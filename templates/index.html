@@ -30,14 +30,17 @@ content="notebooks wholesale, A4 notebooks, bulk notebooks, school notebooks, in
         <a href="#home">INK BOOKS</a>
     </div>
 
-    <ul class="nav-links">
-    <li><a href="#home">Home</a></li>
-    <li><a href="#products">Products</a></li>
-    <li><a href="#quote-form">Bulk Orders</a></li>
-    <li><a href="/track">Track Order</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="#contact">Contact</a></li>
-</ul>
+    <div class="menu-toggle" id="menu-toggle">
+        ☰
+    </div>
+
+    <ul class="nav-links" id="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#products">Products</a></li>
+        <li><a href="#quote-form">Bulk Orders</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+    </ul>
 
 </nav>
 
@@ -344,6 +347,13 @@ content="notebooks wholesale, A4 notebooks, bulk notebooks, school notebooks, in
     </div>
 
 </footer>
+<script>
+const menuToggle = document.getElementById("menu-toggle");
+const navLinks = document.getElementById("nav-links");
 
+menuToggle.addEventListener("click", () => {
+    navLinks.classList.toggle("active");
+});
+</script>
 </body>
 </html>

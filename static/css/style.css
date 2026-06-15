@@ -562,4 +562,102 @@ tr:hover{
     .footer {
         text-align: center;
     }
+
+}
+/* MOBILE VIEW */
+@media (max-width: 768px) {
+
+    .navbar{
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .nav-links{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        padding: 0;
+    }
+
+    .nav-links li{
+        list-style: none;
+    }
+
+    .nav-links a{
+        font-size: 16px;
+    }
+
+    .hero h1{
+        font-size: 42px;
+        line-height: 1.2;
+    }
+
+    .hero p{
+        font-size: 18px;
+    }
+
+    .hero-buttons{
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .quote-btn,
+    .whatsapp-btn-hero{
+        width: 90%;
+        max-width: 300px;
+    }
+}
+/* HAMBURGER MENU */
+
+.menu-toggle{
+    display:none;
+    font-size:30px;
+    color:white;
+    cursor:pointer;
+}
+
+/* MOBILE */
+
+@media (max-width:768px){
+
+    .navbar{
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+    }
+
+    .menu-toggle{
+        display:block;
+        margin-top:10px;
+    }
+
+    .nav-links{
+        display:none;
+        flex-direction:column;
+        width:100%;
+        text-align:center;
+        gap:15px;
+        padding:20px 0;
+    }
+
+    .nav-links.active{
+        display:flex;
+    }
+
+    .hero h1{
+        font-size:42px;
+        line-height:1.2;
+    }
+
+    .hero-buttons{
+        flex-direction:column;
+        gap:15px;
+    }
+
+    .quote-btn,
+    .whatsapp-btn-hero{
+        width:90%;
+        max-width:300px;
+    }
 }
