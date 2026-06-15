@@ -1,25 +1,61 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <title>Track Order</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
 </head>
+
 <body>
 
-    <h1>Track Your Order</h1>
+<section class="quote-section">
 
-    <form action="/track_order" method="POST">
+    <div class="quote-card">
 
-        <input
-            type="text"
-            name="order_id"
-            placeholder="Enter Order ID"
-            required>
+        <h2>📦 Track Your Order</h2>
 
-        <button type="submit">
-            Track Order
-        </button>
+        <p class="quote-subtitle">
+            Enter your Order ID to check status.
+        </p>
 
-    </form>
+        <form action="/track_order" method="POST">
+
+            <input
+                type="text"
+                name="order_id"
+                placeholder="Enter Order ID (Example: INK-3408)"
+                required>
+
+            <button type="submit">
+                Track Order
+            </button>
+
+        </form>
+<hr><br>
+
+<h2>Search By Mobile Number</h2>
+
+<form action="/customer_orders" method="POST">
+
+    <input
+        type="text"
+        name="mobile"
+        placeholder="Enter Mobile Number"
+        required>
+
+    <button type="submit">
+        View My Orders
+    </button>
+
+</form>
+    </div>
+
+</section>
 
 </body>
 </html>

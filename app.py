@@ -147,6 +147,7 @@ def submit():
     BOT_TOKEN = os.environ.get("BOT_TOKEN")
     CHAT_ID = os.environ.get("CHAT_ID")
 
+
     telegram_message = f"""
 📦 NEW INK BOOKS ORDER
 
@@ -228,21 +229,63 @@ def submit():
 
 @app.route("/admin")
 def admin():
-
+    filter_date = request.args.get("date")
     if not session.get("admin"):
         return redirect("/login")
 
     conn = sqlite3.connect("leads.db")
 
-    data = conn.execute(
+    if filter_date:
+
+        data = conn.execute(
+        """
+        SELECT * FROM inquiries
+        WHERE created_at LIKE ?
+        ORDER BY id DESC
+        """,
+        (f"%{filter_date}%",)
+    ).fetchall()
+
+    else:
+
+        data = conn.execute(
         "SELECT * FROM inquiries ORDER BY id DESC"
     ).fetchall()
 
+    today = datetime.now().strftime("%d-%m-%Y")
+    today_orders = len([
+    row for row in data
+    if row[8] and row[8].startswith(today)
+])
+
+    current_month = datetime.now().strftime("%m-%Y")
+
+    month_orders = len([
+        row for row in data
+        if current_month in row[8]
+    ])
+
     conn.close()
+
+    total_qty = sum(
+        int(row[6])
+        for row in data
+        if str(row[6]).isdigit()
+    )
+
+    pending = len([r for r in data if r[9] == "Pending"])
+    processing = len([r for r in data if r[9] == "Processing"])
+    delivered = len([r for r in data if r[9] == "Delivered"])
 
     return render_template(
         "admin.html",
-        data=data
+        data=data,
+        total_qty=total_qty,
+        pending=pending,
+        processing=processing,
+        delivered=delivered,
+        today_orders=today_orders,
+        month_orders=month_orders
     )
 
 
@@ -352,6 +395,26 @@ def export():
     return send_file(
         file_name,
         as_attachment=True
+    )
+
+@app.route("/customer_orders", methods=["POST"])
+def customer_orders():
+
+    mobile = request.form["mobile"]
+
+    conn = sqlite3.connect("leads.db")
+
+    orders = conn.execute(
+        "SELECT * FROM inquiries WHERE mobile=? ORDER BY id DESC",
+        (mobile,)
+    ).fetchall()
+
+    conn.close()
+
+    return render_template(
+        "customer_orders.html",
+        orders=orders,
+        mobile=mobile
     )
 
 

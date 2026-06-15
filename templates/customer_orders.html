@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>My Orders</title>
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+<body>
+
+<section class="quote-section">
+
+<div class="quote-card">
+
+<h2>📦 Orders for {{ mobile }}</h2>
+
+{% if orders %}
+
+<table border="1" width="100%">
+
+<tr>
+<th>Order ID</th>
+<th>Quantity</th>
+<th>Status</th>
+</tr>
+
+{% for order in orders %}
+
+<tr>
+<td>{{ order[1] }}</td>
+<td>{{ order[6] }}</td>
+<td>{{ order[9] }}</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% else %}
+
+<h3>No Orders Found</h3>
+
+{% endif %}
+
+</div>
+
+</section>
+
+</body>
+</html>
