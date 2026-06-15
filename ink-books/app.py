@@ -1,6 +1,10 @@
 from flask import Flask, render_template, request, redirect, session, send_file
 import sqlite3
 import pandas as pd
+import random
+from datetime import datetime
+import requests
+import os
 
 app = Flask(__name__)
 app.secret_key = "inkbooks_secret_2026"
@@ -16,12 +20,15 @@ def init_db():
     conn.execute("""
     CREATE TABLE IF NOT EXISTS inquiries(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        order_id TEXT,
         name TEXT,
         shop TEXT,
         mobile TEXT,
         designs TEXT,
         quantity TEXT,
-        message TEXT
+        message TEXT,
+        created_at TEXT,
+        status TEXT DEFAULT 'Pending'
     )
     """)
 
@@ -41,7 +48,7 @@ def home():
 
 
 # ==========================
-# LOGIN PAGE
+# LOGIN
 # ==========================
 
 @app.route("/login")
@@ -61,19 +68,35 @@ def login_submit():
 
     return """
     <h2>Invalid Username or Password</h2>
-    <a href="/login">Try Again</a>
+    <a href='/login'>Try Again</a>
     """
+
+
+# ==========================
+# LOGOUT
+# ==========================
+
+@app.route("/logout")
+def logout():
+
+    session.pop("admin", None)
+
+    return redirect("/login")
+
+
+# ==========================
+# SUBMIT ORDER
+# ==========================
+
 @app.route("/submit", methods=["POST"])
 def submit():
 
-    name = request.form["name"]
-    shop = request.form["shop"]
-    mobile = request.form["mobile"]
-    message = request.form["message"]
+    name = request.form.get("name", "").strip()
+    shop = request.form.get("shop", "").strip()
+    mobile = request.form.get("mobile", "").strip()
+    message = request.form.get("message", "").strip()
 
     created_at = datetime.now().strftime("%d-%m-%Y %I:%M %p")
-
-    selected_designs = []
 
     products = {
         "Breaking Bad Edition": request.form.get("breaking-bad_qty"),
@@ -90,21 +113,36 @@ def submit():
         "Unicorn Edition": request.form.get("unicorn_qty")
     }
 
+    selected_designs = []
+    total_quantity = 0
+
     for design, qty in products.items():
-        if qty and qty.strip() != "" and int(qty) > 0:
-            selected_designs.append(f"{design} - {qty}")
+
+        if qty and qty.strip():
+
+            try:
+                qty_num = int(qty)
+
+                if qty_num > 0:
+                    selected_designs.append(
+                        f"{design} - {qty_num}"
+                    )
+                    total_quantity += qty_num
+
+            except:
+                pass
+
+    if total_quantity == 0:
+        return """
+        <h2>Please select at least one notebook quantity.</h2>
+        <a href="/">Go Back</a>
+        """
 
     designs = ", ".join(selected_designs)
 
-    quantity = str(
-        sum(
-            int(qty)
-            for qty in products.values()
-            if qty and qty.strip() != ""
-        )
+    order_id = "INK-" + str(
+        random.randint(1000, 9999)
     )
-
-    order_id = "INK-" + str(random.randint(1000, 9999))
 
     BOT_TOKEN = os.environ.get("BOT_TOKEN")
     CHAT_ID = os.environ.get("CHAT_ID")
@@ -121,7 +159,7 @@ def submit():
 📚 Designs:
 {designs}
 
-📦 Quantity: {quantity}
+📦 Quantity: {total_quantity}
 
 📝 Message:
 {message}
@@ -131,13 +169,16 @@ def submit():
 """
 
     try:
-        requests.get(
-            f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
-            params={
-                "chat_id": CHAT_ID,
-                "text": telegram_message
-            }
-        )
+        if BOT_TOKEN and CHAT_ID:
+
+            requests.get(
+                f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
+                params={
+                    "chat_id": CHAT_ID,
+                    "text": telegram_message
+                }
+            )
+
     except:
         pass
 
@@ -146,7 +187,17 @@ def submit():
     conn.execute(
         """
         INSERT INTO inquiries
-        (order_id,name,shop,mobile,designs,quantity,message,created_at,status)
+        (
+            order_id,
+            name,
+            shop,
+            mobile,
+            designs,
+            quantity,
+            message,
+            created_at,
+            status
+        )
         VALUES(?,?,?,?,?,?,?,?,?)
         """,
         (
@@ -155,7 +206,7 @@ def submit():
             shop,
             mobile,
             designs,
-            quantity,
+            str(total_quantity),
             message,
             created_at,
             "Pending"
@@ -170,118 +221,7 @@ def submit():
         order_id=order_id
     )
 
-# ==========================
-# LOGOUT
-# ==========================
 
-@app.route("/logout")
-def logout():
-
-    session.pop("admin", None)
-
-    return redirect("/login")
-
-
-# ==========================
-# FORM SUBMISSION
-# ==========================
-
-@app.route("/submit", methods=["POST"])
-def submit():
-
-    name = request.form["name"]
-    shop = request.form["shop"]
-    mobile = request.form["mobile"]
-
-    # NAME VALIDATION
-    if not name.replace(" ", "").isalpha():
-
-        return render_template(
-            "error.html",
-            title="Invalid Name",
-            message="Name should contain only letters."
-        )
-
-    # SHOP VALIDATION
-    if len(shop.strip()) < 3:
-
-        return render_template(
-            "error.html",
-            title="Invalid Shop Name",
-            message="Please enter a valid shop name."
-        )
-
-    # MOBILE VALIDATION
-    if len(mobile) != 10 or not mobile.isdigit():
-
-        return render_template(
-            "error.html",
-            title="Invalid Mobile Number",
-            message="Please enter a valid 10-digit mobile number."
-        )
-
-    # INDIAN MOBILE VALIDATION
-    if mobile[0] not in "6789":
-
-        return render_template(
-            "error.html",
-            title="Invalid Mobile Number",
-            message="Indian mobile numbers must start with 6, 7, 8 or 9."
-        )
-    message = request.form["message"]
-
-    selected_designs = []
-
-    products = {
-    "Breaking Bad Edition": request.form.get("breaking-bad_qty"),
-    "BTS Edition": request.form.get("bts_qty"),
-    "Minions Edition": request.form.get("minions_qty"),
-    "Virat Kohli Edition": request.form.get("virat_kohli_qty"),
-    "Free Fire Edition": request.form.get("free_fire_qty"),
-    "Squid Game Edition": request.form.get("squid_game_qty"),
-    "Jack Sparrow Edition": request.form.get("jack_sparrow_qty"),
-    "Krishna Edition": request.form.get("krishna_qty"),
-    "Viro Edition": request.form.get("viro_qty"),
-    "Money Heist Edition": request.form.get("money_heist_qty"),
-    "Shiva Edition": request.form.get("shiva_qty"),
-    "Unicorn Edition": request.form.get("unicorn_qty")
-}
-    for design, qty in products.items():
-        if qty and qty.strip() != "" and int(qty) > 0:
-            selected_designs.append(f"{design} - {qty}")
-
-    designs = ", ".join(selected_designs)
-
-    quantity = str(
-        sum(
-            int(qty)
-            for qty in products.values()
-            if qty and qty.strip() != ""
-        )
-    )
-
-    conn = sqlite3.connect("leads.db")
-
-    conn.execute(
-        """
-        INSERT INTO inquiries
-        (name, shop, mobile, designs, quantity, message)
-        VALUES (?, ?, ?, ?, ?, ?)
-        """,
-        (
-            name,
-            shop,
-            mobile,
-            designs,
-            quantity,
-            message
-        )
-    )
-
-    conn.commit()
-    conn.close()
-
-    return render_template("thankyou.html")
 # ==========================
 # ADMIN DASHBOARD
 # ==========================
@@ -307,7 +247,61 @@ def admin():
 
 
 # ==========================
-# DELETE INQUIRY
+# UPDATE STATUS
+# ==========================
+
+@app.route("/update_status/<int:id>", methods=["POST"])
+def update_status(id):
+
+    if not session.get("admin"):
+        return redirect("/login")
+
+    status = request.form["status"]
+
+    conn = sqlite3.connect("leads.db")
+
+    conn.execute(
+        "UPDATE inquiries SET status=? WHERE id=?",
+        (status, id)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect("/admin")
+
+
+# ==========================
+# TRACK ORDER
+# ==========================
+
+@app.route("/track")
+def track():
+    return render_template("track.html")
+
+
+@app.route("/track_order", methods=["POST"])
+def track_order():
+
+    order_id = request.form["order_id"]
+
+    conn = sqlite3.connect("leads.db")
+
+    order = conn.execute(
+        "SELECT * FROM inquiries WHERE order_id=?",
+        (order_id,)
+    ).fetchone()
+
+    conn.close()
+
+    return render_template(
+        "track_result.html",
+        order=order
+    )
+
+
+# ==========================
+# DELETE
 # ==========================
 
 @app.route("/delete/<int:id>")
@@ -330,7 +324,7 @@ def delete(id):
 
 
 # ==========================
-# EXPORT TO EXCEL
+# EXPORT EXCEL
 # ==========================
 
 @app.route("/export")
@@ -362,7 +356,7 @@ def export():
 
 
 # ==========================
-# RUN APPLICATION
+# RUN
 # ==========================
 
 if __name__ == "__main__":

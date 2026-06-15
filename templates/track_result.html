@@ -2,112 +2,71 @@
 <html>
 <head>
 
-<title>Order Status</title>
+    <title>Order Status</title>
 
-<style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-body{
-    font-family:Arial,sans-serif;
-    background:#f5f7fa;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-}
-
-.card{
-    background:white;
-    padding:40px;
-    border-radius:15px;
-    box-shadow:0 0 20px rgba(0,0,0,0.1);
-    width:500px;
-    text-align:center;
-}
-
-h1{
-    color:#1e3a8a;
-    margin-bottom:20px;
-}
-
-.info{
-    text-align:left;
-    margin-top:20px;
-}
-
-.info p{
-    font-size:18px;
-    margin:15px 0;
-}
-
-.pending{
-    color:orange;
-    font-weight:bold;
-}
-
-.processing{
-    color:blue;
-    font-weight:bold;
-}
-
-.delivered{
-    color:green;
-    font-weight:bold;
-}
-
-.btn{
-    display:inline-block;
-    margin-top:25px;
-    padding:12px 25px;
-    background:#1e3a8a;
-    color:white;
-    text-decoration:none;
-    border-radius:8px;
-}
-
-</style>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
 
 </head>
 
 <body>
 
-<div class="card">
+<section class="quote-section">
 
 {% if order %}
 
-<h1>✅ Order Found</h1>
+<div class="quote-card">
 
-<div class="info">
+    <h2>📦 Order Details</h2>
 
-<p><b>Order ID:</b> {{ order[1] }}</p>
+    <p><b>Order ID:</b> {{ order[1] }}</p>
 
-<p><b>Customer:</b> {{ order[2] }}</p>
+    <p><b>Name:</b> {{ order[2] }}</p>
 
-<p><b>Status:</b>
-<span class="
-{% if order[9]=='Pending' %}pending
-{% elif order[9]=='Processing' %}processing
-{% else %}delivered
-{% endif %}
-">
-{{ order[9] }}
-</span>
-</p>
+    <p><b>Shop:</b> {{ order[3] }}</p>
 
-<p><b>Date:</b> {{ order[8] }}</p>
+    <p><b>Mobile:</b> {{ order[4] }}</p>
+
+    <p><b>Designs:</b> {{ order[5] }}</p>
+
+    <p><b>Quantity:</b> {{ order[6] }}</p>
+
+    <h3>
+        Status:
+        <span class="status-{{ order[9]|lower }}">
+            {{ order[9] }}
+        </span>
+    </h3>
+
+    <br>
+
+    <a href="/track" class="quote-btn">
+        Track Another Order
+    </a>
 
 </div>
 
 {% else %}
 
-<h1>❌ Order Not Found</h1>
+<div class="quote-card">
+
+    <h2>❌ Order Not Found</h2>
+
+    <p>Please check your Order ID and try again.</p>
+
+    <br>
+
+    <a href="/track" class="quote-btn">
+        Try Again
+    </a>
+
+</div>
 
 {% endif %}
 
-<a href="/track" class="btn">
-Track Another Order
-</a>
-
-</div>
+</section>
 
 </body>
 </html>

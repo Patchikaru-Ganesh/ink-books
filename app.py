@@ -6,7 +6,6 @@ from datetime import datetime
 import requests
 import os
 
-
 app = Flask(__name__)
 app.secret_key = "inkbooks_secret_2026"
 
@@ -19,19 +18,19 @@ def init_db():
     conn = sqlite3.connect("leads.db")
 
     conn.execute("""
-CREATE TABLE IF NOT EXISTS inquiries(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    order_id TEXT,
-    name TEXT,
-    shop TEXT,
-    mobile TEXT,
-    designs TEXT,
-    quantity TEXT,
-    message TEXT,
-    created_at TEXT,
-    status TEXT DEFAULT 'Pending'
-)
-""")
+    CREATE TABLE IF NOT EXISTS inquiries(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        order_id TEXT,
+        name TEXT,
+        shop TEXT,
+        mobile TEXT,
+        designs TEXT,
+        quantity TEXT,
+        message TEXT,
+        created_at TEXT,
+        status TEXT DEFAULT 'Pending'
+    )
+    """)
 
     conn.commit()
     conn.close()
@@ -49,7 +48,7 @@ def home():
 
 
 # ==========================
-# LOGIN PAGE
+# LOGIN
 # ==========================
 
 @app.route("/login")
@@ -69,8 +68,9 @@ def login_submit():
 
     return """
     <h2>Invalid Username or Password</h2>
-    <a href="/login">Try Again</a>
+    <a href='/login'>Try Again</a>
     """
+
 
 # ==========================
 # LOGOUT
@@ -85,10 +85,64 @@ def logout():
 
 
 # ==========================
-# FORM SUBMISSION
+# SUBMIT ORDER
 # ==========================
 
-    order_id = "INK-" + str(random.randint(1000, 9999))
+@app.route("/submit", methods=["POST"])
+def submit():
+
+    name = request.form.get("name", "").strip()
+    shop = request.form.get("shop", "").strip()
+    mobile = request.form.get("mobile", "").strip()
+    message = request.form.get("message", "").strip()
+
+    created_at = datetime.now().strftime("%d-%m-%Y %I:%M %p")
+
+    products = {
+        "Breaking Bad Edition": request.form.get("breaking-bad_qty"),
+        "BTS Edition": request.form.get("bts_qty"),
+        "Minions Edition": request.form.get("minions_qty"),
+        "Virat Kohli Edition": request.form.get("virat_kohli_qty"),
+        "Free Fire Edition": request.form.get("free_fire_qty"),
+        "Squid Game Edition": request.form.get("squid_game_qty"),
+        "Jack Sparrow Edition": request.form.get("jack_sparrow_qty"),
+        "Krishna Edition": request.form.get("krishna_qty"),
+        "Viro Edition": request.form.get("viro_qty"),
+        "Money Heist Edition": request.form.get("money_heist_qty"),
+        "Shiva Edition": request.form.get("shiva_qty"),
+        "Unicorn Edition": request.form.get("unicorn_qty")
+    }
+
+    selected_designs = []
+    total_quantity = 0
+
+    for design, qty in products.items():
+
+        if qty and qty.strip():
+
+            try:
+                qty_num = int(qty)
+
+                if qty_num > 0:
+                    selected_designs.append(
+                        f"{design} - {qty_num}"
+                    )
+                    total_quantity += qty_num
+
+            except:
+                pass
+
+    if total_quantity == 0:
+        return """
+        <h2>Please select at least one notebook quantity.</h2>
+        <a href="/">Go Back</a>
+        """
+
+    designs = ", ".join(selected_designs)
+
+    order_id = "INK-" + str(
+        random.randint(1000, 9999)
+    )
 
     BOT_TOKEN = os.environ.get("BOT_TOKEN")
     CHAT_ID = os.environ.get("CHAT_ID")
@@ -105,7 +159,7 @@ def logout():
 📚 Designs:
 {designs}
 
-📦 Quantity: {quantity}
+📦 Quantity: {total_quantity}
 
 📝 Message:
 {message}
@@ -114,20 +168,36 @@ def logout():
 {created_at}
 """
 
-    requests.get(
-        f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
-        params={
-            "chat_id": CHAT_ID,
-            "text": telegram_message
-        }
-    )
+    try:
+        if BOT_TOKEN and CHAT_ID:
+
+            requests.get(
+                f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
+                params={
+                    "chat_id": CHAT_ID,
+                    "text": telegram_message
+                }
+            )
+
+    except:
+        pass
 
     conn = sqlite3.connect("leads.db")
 
     conn.execute(
         """
         INSERT INTO inquiries
-        (order_id,name,shop,mobile,designs,quantity,message,created_at,status)
+        (
+            order_id,
+            name,
+            shop,
+            mobile,
+            designs,
+            quantity,
+            message,
+            created_at,
+            status
+        )
         VALUES(?,?,?,?,?,?,?,?,?)
         """,
         (
@@ -136,7 +206,7 @@ def logout():
             shop,
             mobile,
             designs,
-            quantity,
+            str(total_quantity),
             message,
             created_at,
             "Pending"
@@ -149,7 +219,10 @@ def logout():
     return render_template(
         "thankyou.html",
         order_id=order_id
-    )# ==========================
+    )
+
+
+# ==========================
 # ADMIN DASHBOARD
 # ==========================
 
@@ -167,17 +240,40 @@ def admin():
 
     conn.close()
 
-    total_qty = sum(
-        int(row[6]) for row in data
-        if str(row[6]).isdigit()
-    )
-
     return render_template(
         "admin.html",
-        data=data,
-        total_qty=total_qty
+        data=data
     )
 
+
+# ==========================
+# UPDATE STATUS
+# ==========================
+
+@app.route("/update_status/<int:id>", methods=["POST"])
+def update_status(id):
+
+    if not session.get("admin"):
+        return redirect("/login")
+
+    status = request.form["status"]
+
+    conn = sqlite3.connect("leads.db")
+
+    conn.execute(
+        "UPDATE inquiries SET status=? WHERE id=?",
+        (status, id)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect("/admin")
+
+
+# ==========================
+# TRACK ORDER
+# ==========================
 
 @app.route("/track")
 def track():
@@ -203,8 +299,9 @@ def track_order():
         order=order
     )
 
+
 # ==========================
-# DELETE INQUIRY
+# DELETE
 # ==========================
 
 @app.route("/delete/<int:id>")
@@ -225,27 +322,9 @@ def delete(id):
 
     return redirect("/admin")
 
-@app.route("/status/<int:id>/<new_status>")
-def update_status(id, new_status):
-
-    if not session.get("admin"):
-        return redirect("/login")
-
-    conn = sqlite3.connect("leads.db")
-
-    conn.execute(
-        "UPDATE inquiries SET status=? WHERE id=?",
-        (new_status, id)
-    )
-
-    conn.commit()
-    conn.close()
-
-    return redirect("/admin")
-
 
 # ==========================
-# EXPORT TO EXCEL
+# EXPORT EXCEL
 # ==========================
 
 @app.route("/export")
@@ -277,7 +356,7 @@ def export():
 
 
 # ==========================
-# RUN APPLICATION
+# RUN
 # ==========================
 
 if __name__ == "__main__":
