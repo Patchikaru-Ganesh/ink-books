@@ -63,6 +63,112 @@ def login_submit():
     <h2>Invalid Username or Password</h2>
     <a href="/login">Try Again</a>
     """
+@app.route("/submit", methods=["POST"])
+def submit():
+
+    name = request.form["name"]
+    shop = request.form["shop"]
+    mobile = request.form["mobile"]
+    message = request.form["message"]
+
+    created_at = datetime.now().strftime("%d-%m-%Y %I:%M %p")
+
+    selected_designs = []
+
+    products = {
+        "Breaking Bad Edition": request.form.get("breaking-bad_qty"),
+        "BTS Edition": request.form.get("bts_qty"),
+        "Minions Edition": request.form.get("minions_qty"),
+        "Virat Kohli Edition": request.form.get("virat_kohli_qty"),
+        "Free Fire Edition": request.form.get("free_fire_qty"),
+        "Squid Game Edition": request.form.get("squid_game_qty"),
+        "Jack Sparrow Edition": request.form.get("jack_sparrow_qty"),
+        "Krishna Edition": request.form.get("krishna_qty"),
+        "Viro Edition": request.form.get("viro_qty"),
+        "Money Heist Edition": request.form.get("money_heist_qty"),
+        "Shiva Edition": request.form.get("shiva_qty"),
+        "Unicorn Edition": request.form.get("unicorn_qty")
+    }
+
+    for design, qty in products.items():
+        if qty and qty.strip() != "" and int(qty) > 0:
+            selected_designs.append(f"{design} - {qty}")
+
+    designs = ", ".join(selected_designs)
+
+    quantity = str(
+        sum(
+            int(qty)
+            for qty in products.values()
+            if qty and qty.strip() != ""
+        )
+    )
+
+    order_id = "INK-" + str(random.randint(1000, 9999))
+
+    BOT_TOKEN = os.environ.get("BOT_TOKEN")
+    CHAT_ID = os.environ.get("CHAT_ID")
+
+    telegram_message = f"""
+📦 NEW INK BOOKS ORDER
+
+🆔 Order ID: {order_id}
+
+👤 Customer: {name}
+🏪 Shop: {shop}
+📱 Mobile: {mobile}
+
+📚 Designs:
+{designs}
+
+📦 Quantity: {quantity}
+
+📝 Message:
+{message}
+
+🕒 Date:
+{created_at}
+"""
+
+    try:
+        requests.get(
+            f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
+            params={
+                "chat_id": CHAT_ID,
+                "text": telegram_message
+            }
+        )
+    except:
+        pass
+
+    conn = sqlite3.connect("leads.db")
+
+    conn.execute(
+        """
+        INSERT INTO inquiries
+        (order_id,name,shop,mobile,designs,quantity,message,created_at,status)
+        VALUES(?,?,?,?,?,?,?,?,?)
+        """,
+        (
+            order_id,
+            name,
+            shop,
+            mobile,
+            designs,
+            quantity,
+            message,
+            created_at,
+            "Pending"
+        )
+    )
+
+    conn.commit()
+    conn.close()
+
+    return render_template(
+        "thankyou.html",
+        order_id=order_id
+    )
 
 # ==========================
 # LOGOUT
