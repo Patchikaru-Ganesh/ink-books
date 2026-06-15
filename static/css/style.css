@@ -378,50 +378,7 @@ body{
     font-size:30px;
 }
 
-/* =====================
-   MOBILE
-===================== */
 
-@media(max-width:768px){
-
-    .navbar{
-        flex-direction:column;
-        gap:15px;
-    }
-
-    .hero-overlay{
-        flex-direction:column;
-        text-align:center;
-        padding-top:120px;
-    }
-
-    .hero-left,
-    .hero-right{
-        width:100%;
-    }
-
-    .hero-left h1{
-        font-size:40px;
-    }
-
-    .hero-right img{
-        width:280px;
-        margin-top:30px;
-    }
-
-    .product-container,
-    .features-container,
-    .stats{
-        flex-direction:column;
-        align-items:center;
-    }
-
-    .card,
-    .feature-card,
-    .stat-box{
-        width:95%;
-    }
-}
 .success-container{
     text-align:center;
     padding:100px 20px;
@@ -501,113 +458,6 @@ tr:hover{
     color:#16a34a;
     font-weight:bold;
 }
-/* MOBILE RESPONSIVE */
-
-@media (max-width: 768px) {
-
-    .navbar {
-        flex-direction: column;
-        padding: 10px;
-    }
-
-    .nav-links {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px;
-    }
-
-    .hero h1 {
-        font-size: 32px;
-        text-align: center;
-    }
-
-    .hero p {
-        text-align: center;
-        font-size: 16px;
-    }
-
-    .product-container {
-        grid-template-columns: 1fr;
-    }
-
-    .card {
-        width: 100%;
-    }
-
-    .quote-card {
-        width: 95%;
-        margin: auto;
-    }
-
-    input,
-    textarea,
-    button {
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    img {
-        max-width: 100%;
-        height: auto;
-    }
-
-    .stats {
-        flex-direction: column;
-    }
-
-    .features-container {
-        grid-template-columns: 1fr;
-    }
-
-    .footer {
-        text-align: center;
-    }
-
-}
-/* MOBILE VIEW */
-@media (max-width: 768px) {
-
-    .navbar{
-        flex-direction: column;
-        padding: 10px;
-    }
-
-    .nav-links{
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px;
-        padding: 0;
-    }
-
-    .nav-links li{
-        list-style: none;
-    }
-
-    .nav-links a{
-        font-size: 16px;
-    }
-
-    .hero h1{
-        font-size: 42px;
-        line-height: 1.2;
-    }
-
-    .hero p{
-        font-size: 18px;
-    }
-
-    .hero-buttons{
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .quote-btn,
-    .whatsapp-btn-hero{
-        width: 90%;
-        max-width: 300px;
-    }
-}
 /* HAMBURGER MENU */
 
 .menu-toggle{
@@ -621,43 +471,43 @@ tr:hover{
 
 @media (max-width:768px){
 
-    .navbar{
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-    }
-
     .menu-toggle{
         display:block;
-        margin-top:10px;
+        font-size:35px;
+        color:white;
+        cursor:pointer;
+        margin:15px 0;
     }
 
     .nav-links{
         display:none;
         flex-direction:column;
+        align-items:center;
         width:100%;
-        text-align:center;
         gap:15px;
-        padding:20px 0;
+        margin-top:15px;
     }
 
     .nav-links.active{
         display:flex;
     }
 
+    .nav-links li{
+        list-style:none;
+    }
+
+    .nav-links a{
+        font-size:18px;
+        color:white;
+        text-decoration:none;
+    }
+
+    .hero{
+        padding-top:120px;
+    }
+
     .hero h1{
-        font-size:42px;
-        line-height:1.2;
-    }
-
-    .hero-buttons{
-        flex-direction:column;
-        gap:15px;
-    }
-
-    .quote-btn,
-    .whatsapp-btn-hero{
-        width:90%;
-        max-width:300px;
+        font-size:52px;
+        line-height:1.1;
     }
 }
